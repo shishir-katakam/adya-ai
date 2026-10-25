@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09111f" />
+    <title>ADYA Agent Harness</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark">A</div>
+          <div>
+            <div class="eyebrow">ADYA AI · PROTOTYPE</div>
+            <h1>Agent Harness</h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <span id="runtimeBadge" class="status-pill neutral">Connecting…</span>
+          <span class="muted">Governed orchestration workspace</span>
+        </div>
+      </header>
+
+      <nav class="plane-nav" aria-label="Planes">
+        <button class="nav-button active" data-plane="userPlane">User plane <span>Run missions</span></button>
+        <button class="nav-button" data-plane="adminPlane">Admin plane <span>Configure harness</span></button>
+      </nav>
+
+      <main>
+        <section class="metrics-grid" id="metricsGrid"></section>
+
+        <section id="userPlane" class="plane active-plane">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">USER PLANE</div>
+              <h2>Turn a goal into a governed agent graph</h2>
+              <p class="muted">The runtime searches memory, selects registry capabilities, spawns goal-driven agents, reviews the contract, and destroys temporary agents when they finish.</p>
+            </div>
+            <div class="architecture-chip">
+              <span class="pulse-dot"></span>
+              <span>Graph lifecycle online</span>
+            </div>
+          </div>
+
+          <div class="content-grid two-thirds">
+            <article class="panel mission-panel">
+                <div class="panel-heading">
+                <div>
+                  <div class="eyebrow">MISSION CONSOLE</div>
+                  <h3>Submit a goal</h3>
+                </div>
+                <span class="mini-label">POST /api/runs</span>
+                </div>
+                <form id="missionForm">
+                <label for="userIdentity">User identity</label>
+                <input id="userIdentity" value="anonymous" maxlength="128" autocomplete="username" />
+                <p class="field-help">Runs, feedback, and retrieval memory are scoped to this identity.</p>
+                <label for="missionGoal">Goal</label>
+                <textarea id="missionGoal" rows="6" placeholder="Describe the outcome you want the harness to coordinate…">Build a concise demo of a registry-backed, governed multi-agent harness for ADYA AI.</textarea>
+                <div class="form-row">
+                  <div class="field-grow">
+                    <label for="contractSelect">Agent contract</label>
+                    <select id="contractSelect"></select>
+                  </div>
+                  <div class="field-small">
+                    <label for="agentCount">Max agents</label>
+                    <input id="agentCount" type="number" min="1" max="12" value="5" />
+                  </div>
+                </div>
+                <button class="primary-button" type="submit"><span>Run governed mission</span><span class="button-arrow">↗</span></button>
+                <p id="missionMessage" class="form-message" role="status"></p>
+              </form>
+              <div class="contract-preview" id="contractPreview"></div>
+            </article>
+
+            <aside class="panel capability-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="eyebrow">RUNTIME CONTRACT</div>
+                  <h3>Five required surfaces</h3>
+                </div>
+              </div>
+              <ul class="capability-list">
+                <li><span class="capability-number">01</span><div><strong>MCP registry</strong><small>Plug in MCPs on demand</small></div><span class="check">✓</span></li>
+                <li><span class="capability-number">02</span><div><strong>Skill registry</strong><small>Extend agent abilities live</small></div><span class="check">✓</span></li>
+                <li><span class="capability-number">03</span><div><strong>Tool registry</strong><small>Add or create tools</small></div><span class="check">✓</span></li>
+                <li><span class="capability-number">04</span><div><strong>Governance protocol</strong><small>Policy before execution</small></div><span class="check">✓</span></li>
+                <li><span class="capability-number">05</span><div><strong>Agent contracts</strong><small>Bounded goals and criteria</small></div><span class="check">✓</span></li>
+              </ul>
+              <div class="callout">
+                <span class="callout-icon">✦</span>
+                <div><strong>Continual learning enabled</strong><p>Completed runs and feedback become searchable memory for the next mission.</p></div>
+              </div>
+            </aside>
+          </div>
+
+          <div class="content-grid main-output-grid">
+            <article class="panel run-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="eyebrow">LATEST EXECUTION</div>
+                  <h3 id="runTitle">No mission executed yet</h3>
+                </div>
+                <span id="runStatus" class="status-pill neutral">Waiting</span>
+              </div>
+              <div id="governanceSummary" class="governance-summary empty-state">Run a mission to see the governance decision.</div>
+              <div class="graph-wrap">
+                <div class="graph-heading"><span>Agent graph</span><span id="agentLifecycle" class="muted">0 spawned · 0 destroyed</span></div>
+                <div id="agentGraph" class="agent-graph empty-state">The graph will appear here after a run.</div>
+              </div>
+              <div class="output-block">
+                <div class="graph-heading"><span>Final handoff</span><span id="memoryHitCount" class="muted">0 memory hits</span></div>
+                <pre id="runOutput" class="output-text empty-state">The final synthesis will appear here.</pre>
+              </div>
+            </article>
+
+            <aside class="panel timeline-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="eyebrow">AUDIT TRAIL</div>
+                  <h3>Lifecycle events</h3>
+                </div>
+              </div>
+              <div id="eventTimeline" class="event-timeline empty-state">No events yet.</div>
+              <div class="feedback-box">
+                <div class="eyebrow">CONTINUAL LEARNING</div>
+                <h4>Teach the harness</h4>
+                <div class="feedback-row">
+                  <select id="feedbackScore" aria-label="Feedback score"><option value="5">5 · excellent</option><option value="4">4 · strong</option><option value="3">3 · okay</option><option value="2">2 · weak</option><option value="1">1 · poor</option></select>
+                  <button id="feedbackButton" class="secondary-button" type="button">Save feedback</button>
+                </div>
+                <textarea id="feedbackText" rows="3" placeholder="What should the next run do better?"></textarea>
+                <p id="feedbackMessage" class="form-message" role="status"></p>
+              </div>
+            </aside>
+          </div>
+
+          <section class="panel memory-panel">
+            <div class="panel-heading">
+              <div><div class="eyebrow">MEMORY SYSTEM</div><h3>What the harness remembers</h3></div>
+              <span class="mini-label">memory.search · memory.write</span>
+            </div>
+            <div id="memoryList" class="memory-list empty-state">No memory items yet.</div>
+          </section>
+        </section>
+
+        <section id="adminPlane" class="plane">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">ADMIN PLANE</div>
+              <h2>Configure the harness without changing the runtime</h2>
+              <p class="muted">Registries, governance policies, and contracts are runtime data. Add new capabilities on demand and immediately use them in the user plane.</p>
+            </div>
+            <div class="admin-token-control"><label for="adminToken">Admin token</label><input id="adminToken" type="password" placeholder="Only needed if ADYA_ADMIN_TOKEN is set" /></div>
+          </div>
+
+          <div class="registry-columns">
+            <article class="panel registry-panel"><div class="panel-heading"><div><div class="eyebrow">MCP REGISTRY</div><h3>Model Context Protocol servers</h3></div><span id="mcpCount" class="count-badge">0</span></div><div id="mcpList" class="registry-list"></div><form class="registry-form" data-kind="mcps"><input name="name" placeholder="New MCP name" required /><input name="endpoint" placeholder="builtin:// or https:// endpoint" /><input name="description" placeholder="What it provides" /><button class="secondary-button" type="submit">Add MCP</button></form></article>
+            <article class="panel registry-panel"><div class="panel-heading"><div><div class="eyebrow">SKILL REGISTRY</div><h3>Composable skills</h3></div><span id="skillCount" class="count-badge">0</span></div><div id="skillList" class="registry-list"></div><form class="registry-form" data-kind="skills"><input name="name" placeholder="New skill name" required /><input name="description" placeholder="What the skill does" /><button class="secondary-button" type="submit">Add skill</button></form></article>
+            <article class="panel registry-panel"><div class="panel-heading"><div><div class="eyebrow">TOOL REGISTRY</div><h3>Callable tools</h3></div><span id="toolCount" class="count-badge">0</span></div><div id="toolList" class="registry-list"></div><form class="registry-form" data-kind="tools"><input name="name" placeholder="New tool name" required /><input name="description" placeholder="What the tool does" /><button class="secondary-button" type="submit">Add tool</button></form></article>
+          </div>
+
+           <div class="content-grid admin-lower-grid">
+            <article class="panel policy-panel"><div class="panel-heading"><div><div class="eyebrow">GOVERNANCE PROTOCOL</div><h3>Policies on demand</h3></div><span class="mini-label">preflight gate</span></div><div id="policyList" class="policy-list"></div><form id="policyForm" class="stack-form"><input name="name" placeholder="Policy name" required /><input name="deny_patterns" placeholder="Blocked phrases, comma separated" /><input name="approval_required_for" placeholder="Approval gates, comma separated" /><button class="secondary-button" type="submit">Create policy</button></form></article>
+            <article class="panel contract-panel"><div class="panel-heading"><div><div class="eyebrow">AGENT CONTRACTS</div><h3>Bounded execution specs</h3></div><span class="mini-label">goal · tools · criteria</span></div><div id="contractList" class="contract-list"></div><form id="contractForm" class="stack-form"><input name="name" placeholder="Contract name" required /><input name="max_agents" type="number" min="1" max="12" value="4" /><input name="acceptance_criteria" placeholder="Acceptance criteria, comma separated" /><button class="secondary-button" type="submit">Create contract</button></form></article>
+           </div>
+           <div class="content-grid admin-lower-grid admin-inspection-grid">
+             <article class="panel inspection-panel"><div class="panel-heading"><div><div class="eyebrow">AUDIT EVENTS</div><h3>Governance decisions</h3></div><button id="auditRefreshButton" class="secondary-button" type="button">Refresh</button></div><pre id="auditOutput" class="inspection-output empty-state">Use the admin token to inspect decisions.</pre></article>
+             <article class="panel inspection-panel"><div class="panel-heading"><div><div class="eyebrow">ERRORS</div><h3>Persisted failures</h3></div><button id="errorsRefreshButton" class="secondary-button" type="button">Refresh</button></div><pre id="errorsOutput" class="inspection-output empty-state">Use the admin token to inspect failures.</pre></article>
+           </div>
+           <div class="admin-actions"><button id="resetButton" class="danger-button" type="button">Reset demo state</button><span id="adminMessage" class="form-message" role="status"></span></div>
+        </section>
+      </main>
+
+      <footer class="footer"><span>ADYA Agent Harness · compact prototype</span><span>Admin plane · User plane · Registry-first orchestration</span></footer>
+    </div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+.env
+.env.*
+!.env.example
+.opencode/
+ADYA_AI_CEO_Requirements_for_Astra.pdf
+call transcription.txt
+data/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.venv-*/
+node_modules/
+deepseek-harness/node_modules/
+deepseek-harness/.turbo/
+deepseek-harness/**/dist/
+deepseek-harness/**/lib/
+deepseek-harness/**/coverage/
+*.zip
+*.mp3
+*.mpeg
+*.pdf
+*.tmp
+
+# Local DeepSeek Harness state and credentials
+.dsh-adya/
+
+# Local application state and workspace configuration
+data/
+.freebuff/
+.dsh-adya/

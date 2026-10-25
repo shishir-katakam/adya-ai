@@ -1,0 +1,13 @@
+.git
+.opencode
+node_modules
+deepseek-harness
+__pycache__
+*.pyc
+*.zip
+*.mp3
+*.mpeg
+*.pdf
+call transcription.txt
+data
+.venv*
